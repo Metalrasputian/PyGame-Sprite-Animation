@@ -71,19 +71,14 @@ class AnimationHandler():
     # Gets an animation from the animation library by name
     def get_animation(self, name):
 
-        for animation in self.animations:
-            if name == animation.name:
-                return self.animations[self.animations.index(name)]
+        matches = [x for x in self.animations if x.name == name]
 
-        # if name in self.animations:
-        #     return self.animations[self.animations.index(name)]
-        # else:
-        #     pass
+        return matches[0]
 
     # Clears the animation queue and adds the supplied animation sequence
     def override_queue(self, animation, scale=1):
         self.queue.clear()
-        self.queue.append(animation, scale)
+        self.queue.append({'animation': animation, 'scale': scale})
     
     # Gets the named animation sequence, clears the animation queue, and then adds the named animation sequence
     def override_by_name(self, name, scale=1):
@@ -101,6 +96,11 @@ class AnimationHandler():
     def hold_current(self, frames=1):
         self.is_held = True 
         self.hold_period = frames
+    
+    # Clears the animation queue and sets the default animation
+    def clear_all(self):
+        self.queue.clear()
+        self.current_animation = self.default_animation
 
     # State machine to supply the current animation frame, and then advance to the next frame or render the next freeze frame
     def animate(self, speed=1):
